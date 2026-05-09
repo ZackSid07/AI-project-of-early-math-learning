@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import '../services/gemini_service.dart';
+import 'package:math_buddy/l10n/app_localizations.dart';
 
 class RevealedAnswerScreen extends StatefulWidget {
   final String childsEquation;
@@ -16,9 +17,11 @@ class RevealedAnswerScreen extends StatefulWidget {
   State<RevealedAnswerScreen> createState() => _RevealedAnswerScreenState();
 }
 
-class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with SingleTickerProviderStateMixin {
+class _RevealedAnswerScreenState extends State<RevealedAnswerScreen>
+    with SingleTickerProviderStateMixin {
   final FlutterTts _flutterTts = FlutterTts();
-  final GeminiService _geminiService = GeminiService(apiKey: 'API-key-of-AI');
+  final GeminiService _geminiService =
+      GeminiService(apiKey: 'API-Key-of-AI');
   bool _isLoadingGemini = false;
 
   int _num1 = 0;
@@ -56,15 +59,15 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
         _num1 = int.parse(parts[0]);
         _operator = parts[1];
         _num2 = int.parse(parts[2]);
-        
+
         var eqParts = widget.correctEquation.split('=');
-        if(eqParts.length > 1) {
-            _answer = int.parse(eqParts[1].trim());
+        if (eqParts.length > 1) {
+          _answer = int.parse(eqParts[1].trim());
         }
         _canParse = true;
-        explanationText = _operator == '-' 
-          ? "Count the first group of $_num1 apple(s), then take away $_num2 apple(s). Together, they leave $_answer apples!"
-          : "Count the first group of $_num1 apple(s), then add the $_num2 apples from the next group. Together, they make $_answer apples!";
+        explanationText = _operator == '-'
+            ? "Count the first group of $_num1 apple(s), then take away $_num2 apple(s). Together, they leave $_answer apples!"
+            : "Count the first group of $_num1 apple(s), then add the $_num2 apples from the next group. Together, they make $_answer apples!";
       }
     } catch (e) {
       _canParse = false;
@@ -86,7 +89,7 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
     if (startIndex != -1) {
       String intro = text.substring(0, startIndex);
       String counting = text.substring(startIndex);
-      
+
       await _flutterTts.speak(intro);
       _animationController.forward(from: 0.0);
       await _flutterTts.speak(counting);
@@ -99,14 +102,15 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
   void _playGeminiExplanation() async {
     if (!_canParse) return;
     setState(() => _isLoadingGemini = true);
-    String expl = await _geminiService.generateRevealedStory(_num1, _operator, _num2, _answer);
+    String expl = await _geminiService.generateRevealedStory(
+        _num1, _operator, _num2, _answer);
     if (mounted) {
       setState(() {
         _isLoadingGemini = false;
         explanationText = expl;
       });
     }
-    
+
     await _playTextAndAnimation(expl);
   }
 
@@ -153,10 +157,16 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
         color: color,
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 4),
-        boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(0,4), blurRadius: 4)],
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, offset: Offset(0, 4), blurRadius: 4)
+        ],
       ),
       child: Center(
-        child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
+        child: Text(text,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 32,
+                fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -178,7 +188,8 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
                 bottomRight: Radius.circular(24),
               ),
               boxShadow: [
-                BoxShadow(color: Colors.black12, offset: Offset(0, 4), blurRadius: 8)
+                BoxShadow(
+                    color: Colors.black12, offset: Offset(0, 4), blurRadius: 8)
               ],
             ),
             child: SafeArea(
@@ -189,14 +200,15 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
                     top: 8,
                     left: 8,
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 28),
+                      icon: const Icon(Icons.arrow_back_ios_new,
+                          color: Colors.white, size: 28),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
-                  const Center(
+                  Center(
                     child: Text(
-                      "💡 Oops! Almost there.",
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.hintScreenOops,
+                      style: const TextStyle(
                         fontFamily: 'Public Sans',
                         color: Colors.white,
                         fontSize: 20,
@@ -208,7 +220,7 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
               ),
             ),
           ),
-          
+
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -237,7 +249,8 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFF3E0),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFFFFCC80), width: 2),
+                      border:
+                          Border.all(color: const Color(0xFFFFCC80), width: 2),
                     ),
                     child: Row(
                       children: [
@@ -245,7 +258,8 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
                         const SizedBox(width: 16),
                         Expanded(
                           child: Text(
-                            "Let's try the number $_answer together!\nLet's look closely at the apples.",
+                            AppLocalizations.of(context)!
+                                .letsTryTheNumber(_answer.toString()),
                             style: const TextStyle(
                               color: Color(0xFFE65100),
                               fontSize: 18,
@@ -264,20 +278,30 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [BoxShadow(color: Colors.black12, offset: Offset(0, 4), blurRadius: 8)],
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset(0, 4),
+                            blurRadius: 8)
+                      ],
                     ),
                     child: Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
-                              "COUNTING CHECK",
-                              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                            Text(
+                              AppLocalizations.of(context)!.countingCheck,
+                              style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2),
                             ),
                             const SizedBox(width: 8),
                             GestureDetector(
-                              onTap: _isLoadingGemini ? null : _playGeminiExplanation,
+                              onTap: _isLoadingGemini
+                                  ? null
+                                  : _playGeminiExplanation,
                               child: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: const BoxDecoration(
@@ -285,16 +309,23 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
                                   shape: BoxShape.circle,
                                 ),
                                 child: _isLoadingGemini
-                                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                                    : const Icon(Icons.volume_up, color: Colors.white, size: 20),
+                                    ? const SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2))
+                                    : const Icon(Icons.volume_up,
+                                        color: Colors.white, size: 20),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 16),
-                        const Text("Here is how we calculate this:", style: TextStyle(color: Colors.black54)),
+                        Text(AppLocalizations.of(context)!.hereIsHowWeCalculate,
+                            style: const TextStyle(color: Colors.black54)),
                         const SizedBox(height: 16),
-                        
+
                         // Apple visual equation
                         Wrap(
                           alignment: WrapAlignment.center,
@@ -302,25 +333,36 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
                           spacing: 8,
                           children: [
                             Wrap(
-                              children: List.generate(_num1, (i) => 
-                                _buildAnimatedApple(i, _num1 + _num2 + _answer)
-                              ),
+                              children: List.generate(
+                                  _num1,
+                                  (i) => _buildAnimatedApple(
+                                      i, _num1 + _num2 + _answer)),
                             ),
-                            Text(" $_operator ", style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue)),
+                            Text(" $_operator ",
+                                style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue)),
                             Wrap(
-                              children: List.generate(_num2, (i) => 
-                                _buildAnimatedApple(_num1 + i, _num1 + _num2 + _answer)
-                              ),
+                              children: List.generate(
+                                  _num2,
+                                  (i) => _buildAnimatedApple(
+                                      _num1 + i, _num1 + _num2 + _answer)),
                             ),
-                            const Text(" = ", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey)),
+                            const Text(" = ",
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey)),
                             Wrap(
-                              children: List.generate(_answer, (i) => 
-                                _buildAnimatedApple(_num1 + _num2 + i, _num1 + _num2 + _answer)
-                              ),
+                              children: List.generate(
+                                  _answer,
+                                  (i) => _buildAnimatedApple(_num1 + _num2 + i,
+                                      _num1 + _num2 + _answer)),
                             ),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 16),
                         GestureDetector(
                           onTap: () async {
@@ -329,7 +371,9 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
                           child: Text(
                             explanationText,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF37474F)),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF37474F)),
                           ),
                         )
                       ],
@@ -354,19 +398,29 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
                           decoration: BoxDecoration(
                             color: const Color(0xFFD32F2F),
                             shape: BoxShape.circle,
-                            border: Border.all(color: const Color(0xFFFFCDD2), width: 8),
-                            boxShadow: const [BoxShadow(color: Colors.black26, offset: Offset(0, 4), blurRadius: 4)],
+                            border: Border.all(
+                                color: const Color(0xFFFFCDD2), width: 8),
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.black26,
+                                  offset: Offset(0, 4),
+                                  blurRadius: 4)
+                            ],
                           ),
                           child: Center(
                             child: Text(
                               "$_answer",
-                              style: const TextStyle(color: Colors.white, fontSize: 48, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          "THE ANSWER IS $_answer!",
+                          AppLocalizations.of(context)!
+                              .theAnswerIs(_answer.toString()),
                           style: const TextStyle(
                             color: Color(0xFFD32F2F),
                             fontSize: 24,
@@ -381,7 +435,7 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
               ),
             ),
           ),
-          
+
           // TRY AGAIN BUTTON
           Padding(
             padding: const EdgeInsets.all(24.0),
@@ -391,11 +445,17 @@ class _RevealedAnswerScreenState extends State<RevealedAnswerScreen> with Single
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF42A5F5),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32)),
                 ),
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.refresh, color: Colors.white, size: 28),
-                label: const Text("TRY AGAIN", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold, letterSpacing: 1.5)),
+                label: Text(AppLocalizations.of(context)!.tryAgain,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5)),
               ),
             ),
           ),

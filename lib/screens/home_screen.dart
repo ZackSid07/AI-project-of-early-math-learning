@@ -9,6 +9,7 @@ import 'camera_screen.dart';
 import '../providers/course_provider.dart';
 import 'math_journey_screen.dart';
 import 'settings_screen.dart';
+import 'package:math_buddy/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -287,9 +288,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               blurRadius: 10,
                                               offset: Offset(0, 4))
                                         ]),
-                                    child: const Text(
-                                      "BOTTLE CAP MATH",
-                                      style: TextStyle(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.bottleCapMath,
+                                      style: const TextStyle(
                                         color: Color(0xFF00C6FF),
                                         fontWeight: FontWeight.w900,
                                         fontSize: 12,
@@ -298,19 +299,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 12),
-                                  const Row(
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "Math Buddy",
-                                        style: TextStyle(
+                                        AppLocalizations.of(context)!.mathBuddy,
+                                        style: const TextStyle(
                                           fontSize: 42,
                                           fontWeight: FontWeight.w900,
                                           color: Color(0xFF1A202C),
                                           letterSpacing: -1.0,
                                         ),
                                       ),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Text("🎓", style: TextStyle(fontSize: 36)),
                                     ],
                                   ),
@@ -345,15 +346,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                         blurRadius: 2,
                                         offset: Offset(0, 1))
                                   ]),
-                              child: const Row(
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.volume_up_rounded,
+                                  const Icon(Icons.volume_up_rounded,
                                       color: Color(0xFF0072FF), size: 20),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Text(
-                                    "Hear it!",
-                                    style: TextStyle(
+                                    AppLocalizations.of(context)!.hearIt,
+                                    style: const TextStyle(
                                       color: Color(0xFF0072FF),
                                       fontWeight: FontWeight.w800,
                                       fontSize: 14,
@@ -472,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
         
                           // --- 3D Puffy Action Buttons ---
                           AnimatedPuffyButton(
-                            title: "START SCANNING",
+                            title: AppLocalizations.of(context)!.startScanning,
                             color: const Color(0xFF00FF77),
                             shadowColor: const Color(0xFF009E4A),
                             icon: Icons.photo_camera_rounded,
@@ -494,8 +495,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(height: 16),
         
                           AnimatedPuffyButton(
-                            title: "Adventure Map",
-                            subtext: "LEVEL ${activeLevel.levelNumber} UNLOCKED!",
+                            title: AppLocalizations.of(context)!.adventureMap,
+                            subtext: AppLocalizations.of(context)!.levelUnlocked(activeLevel.levelNumber),
                             color: const Color(0xFFFF9500),
                             shadowColor: const Color(0xFFC47F00),
                             bgOpacityIcon: Colors.orange.shade800.withOpacity(0.2),
@@ -516,8 +517,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(height: 16),
         
                           AnimatedPuffyButton(
-                            title: "Practice Mode",
-                            subtext: "SHARPEN SKILLS",
+                            title: AppLocalizations.of(context)!.practiceMode,
+                            subtext: AppLocalizations.of(context)!.sharpenSkills,
                             color: const Color(0xFF00C6FF),
                             shadowColor: const Color(0xFF0084FF),
                             bgOpacityIcon: Colors.blue.shade900.withOpacity(0.2),
@@ -579,9 +580,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  "STREAK",
-                                  style: TextStyle(
+                                Text(
+                                  AppLocalizations.of(context)!.streak,
+                                  style: const TextStyle(
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w900,
                                     fontSize: 9,
@@ -589,7 +590,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "${courseProvider.currentStreak} Day${courseProvider.currentStreak == 1 ? '' : 's'}",
+                                  AppLocalizations.of(context)!.daysStreak(courseProvider.currentStreak),
                                   style: const TextStyle(
                                     color: Color(0xFF1A202C),
                                     fontWeight: FontWeight.w900,

@@ -12,6 +12,7 @@ import '../theme/app_theme.dart';
 import 'hint_screen.dart';
 import 'revealed_answer_screen.dart';
 import 'digital_caps_screen.dart';
+import 'package:math_buddy/l10n/app_localizations.dart';
 
 
 class CameraScreen extends StatefulWidget {
@@ -664,7 +665,7 @@ class _CameraScreenState extends State<CameraScreen> {
                                 ),
                                 Flexible(
                                   child: Text(
-                                    "BOTTLE CAP MATH",
+                                    AppLocalizations.of(context)!.bottleCapMath,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       color: AppTheme.primaryBlue,
@@ -721,9 +722,9 @@ class _CameraScreenState extends State<CameraScreen> {
                             ),
                             child: Center(
                               child: widget.isPracticeMode
-                                  ? const Text(
-                                      "Practice Mode: Free Play!",
-                                      style: TextStyle(
+                                  ? Text(
+                                      AppLocalizations.of(context)!.practiceModeFreePlay,
+                                      style: const TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold,
                                         color: Color(0xFF1E293B),
@@ -732,9 +733,9 @@ class _CameraScreenState extends State<CameraScreen> {
                                   : RichText(
                                       text: TextSpan(
                                         children: [
-                                          const TextSpan(
-                                            text: "Solve: ",
-                                            style: TextStyle(
+                                          TextSpan(
+                                            text: AppLocalizations.of(context)!.solve,
+                                            style: const TextStyle(
                                               fontSize: 28,
                                               fontWeight: FontWeight.w900,
                                               color: Color(
@@ -819,9 +820,9 @@ class _CameraScreenState extends State<CameraScreen> {
                                       ),
                                     ],
                                   ),
-                                  child: const Text(
-                                    "What's the answer?",
-                                    style: TextStyle(
+                                  child: Text(
+                                    AppLocalizations.of(context)!.whatsTheAnswer,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -889,7 +890,7 @@ class _CameraScreenState extends State<CameraScreen> {
                                         color: Colors.white, size: 36),
                                     const SizedBox(width: 12),
                                     Text(
-                                      _isAnalyzing ? "ANALYZING..." : "SNAP",
+                                      _isAnalyzing ? AppLocalizations.of(context)!.analyzing : AppLocalizations.of(context)!.snap,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 32,
@@ -924,9 +925,9 @@ class _CameraScreenState extends State<CameraScreen> {
                         ),
                       ],
                     ),
-                    child: const Text(
-                      "Line up your answer here!",
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context)!.lineUpYourAnswerHere,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -976,18 +977,18 @@ class _CameraScreenState extends State<CameraScreen> {
           child: Column(
             children: [
               // Header
-              const Text(
-                "You did it!",
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.youDidIt,
+                style: const TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.w900,
                   color: AppTheme.primaryBlue,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                "Great job solving the puzzle!",
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.greatJobSolvingPuzzle,
+                style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black54,
                   fontWeight: FontWeight.bold,
@@ -1093,7 +1094,7 @@ class _CameraScreenState extends State<CameraScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ToyButton(
-                  text: "Next Puzzle \u2192", // Right Arrow Unicode
+                  text: AppLocalizations.of(context)!.nextPuzzle, // Right Arrow Unicode
                   color: AppTheme.primaryBlue,
                   onPressed: () {
                     Navigator.pop(context); // Close modal

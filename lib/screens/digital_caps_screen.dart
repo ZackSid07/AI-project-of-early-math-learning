@@ -8,6 +8,7 @@ import 'revealed_answer_screen.dart';
 import 'camera_screen.dart';
 import 'math_journey_screen.dart';
 import '../main.dart' as main;
+import 'package:math_buddy/l10n/app_localizations.dart';
 
 class DigitalCapsScreen extends StatefulWidget {
   final LevelData? targetLevel;
@@ -65,7 +66,7 @@ class _DigitalCapsScreenState extends State<DigitalCapsScreen> {
   void _submitEquation() {
     if (_slots.contains(null)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Fill all slots first!")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.fillAllSlotsFirst)),
       );
       return;
     }
@@ -224,11 +225,11 @@ class _DigitalCapsScreenState extends State<DigitalCapsScreen> {
                             icon: const Icon(Icons.arrow_back_ios_new, color: AppTheme.primaryBlue),
                             onPressed: () => Navigator.pop(context),
                           ),
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              "DIGITAL CAPS MODE",
+                              AppLocalizations.of(context)!.digitalCapsMode,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: AppTheme.primaryBlue,
                                 fontSize: 22,
                                 fontWeight: FontWeight.w900,
@@ -260,10 +261,10 @@ class _DigitalCapsScreenState extends State<DigitalCapsScreen> {
                           ],
                         ),
                         child: widget.isPracticeMode
-                            ? const Text(
-                                "Practice Mode: Free Play!",
+                            ? Text(
+                                AppLocalizations.of(context)!.practiceModeFreePlay,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF1E293B),
@@ -273,9 +274,9 @@ class _DigitalCapsScreenState extends State<DigitalCapsScreen> {
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
                                   children: [
-                                    const TextSpan(
-                                      text: "Solve:  ",
-                                      style: TextStyle(
+                                    TextSpan(
+                                      text: AppLocalizations.of(context)!.solve,
+                                      style: const TextStyle(
                                         fontSize: 26,
                                         fontWeight: FontWeight.w900,
                                         color: Color(0xFF1E293B),
@@ -368,7 +369,7 @@ class _DigitalCapsScreenState extends State<DigitalCapsScreen> {
                         child: SizedBox(
                           width: double.infinity,
                           child: ToyButton(
-                            text: "SUBMIT",
+                            text: AppLocalizations.of(context)!.submit,
                             onPressed: _submitEquation,
                             color: AppTheme.successGreen,
                           ),
@@ -381,19 +382,19 @@ class _DigitalCapsScreenState extends State<DigitalCapsScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 24.0),
                         child: Column(
                           children: [
-                            const Text(
-                              "Great Job! 🎉",
-                              style: TextStyle(
+                            Text(
+                              AppLocalizations.of(context)!.greatJob,
+                              style: const TextStyle(
                                 fontSize: 48,
                                 fontWeight: FontWeight.w900,
                                 color: AppTheme.successGreen,
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              "You solved the puzzle digitally!",
+                            Text(
+                              AppLocalizations.of(context)!.solvedDigitally,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF1E293B),
@@ -406,7 +407,7 @@ class _DigitalCapsScreenState extends State<DigitalCapsScreen> {
                               runSpacing: 20,
                               children: [
                                 ToyButton(
-                                  text: "NEXT",
+                                  text: AppLocalizations.of(context)!.next,
                                   icon: const Icon(Icons.map_rounded, color: Colors.white),
                                   color: AppTheme.primaryBlue,
                                   onPressed: () {
@@ -419,7 +420,7 @@ class _DigitalCapsScreenState extends State<DigitalCapsScreen> {
                                   },
                                 ),
                                 ToyButton(
-                                  text: "CAMERA",
+                                  text: AppLocalizations.of(context)!.camera,
                                   icon: const Icon(Icons.camera_alt_rounded, color: Colors.white),
                                   color: Colors.orange,
                                   onPressed: () {

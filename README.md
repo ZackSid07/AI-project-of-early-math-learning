@@ -111,6 +111,8 @@ lib/
 *   ✅ **Dynamic Slot Generation**: Refined Digital Caps Mode to calculate slots by character length, supporting multi-digit arithmetic.
 *   ✅ **Header Overflow Fix**: Resolved "Yellow Stripe" RenderFlex warnings in the Camera UI.
 *   ✅ **Label Precision**: Verified and fixed the `labels.txt` mapping for operator detection reliability.
+*   ✅ **Full App Localization (English/Bengali)**: Integrated `flutter_localizations` to translate the entire app UI dynamically via a toggle in the Settings screen.
+*   ✅ **Bug Fix**: Resolved `ProviderNotFoundException` in `main.dart` by correctly wrapping `MaterialApp` with `Consumer<SettingsProvider>`.
 
 ---
 

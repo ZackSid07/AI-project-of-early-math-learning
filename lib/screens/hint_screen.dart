@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import '../services/gemini_service.dart';
+import 'package:math_buddy/l10n/app_localizations.dart';
 
 class HintScreen extends StatefulWidget {
   final String childsEquation;
   final String correctEquation;
-  
+
   // Optional legacy fields for fallback usage in camera_screen
   final String? correctAnswer;
   final String? aiExplanation;
@@ -24,9 +25,10 @@ class HintScreen extends StatefulWidget {
 
 class _HintScreenState extends State<HintScreen> {
   final FlutterTts _flutterTts = FlutterTts();
-  final GeminiService _geminiService = GeminiService(apiKey: 'API-key-of-AI');
+  final GeminiService _geminiService =
+      GeminiService(apiKey: 'API-Key-of-AI');
   bool _isLoadingGemini = false;
-  
+
   int _num1 = 0;
   String _operator = '+';
   int _num2 = 0;
@@ -45,7 +47,7 @@ class _HintScreenState extends State<HintScreen> {
     await _flutterTts.setSpeechRate(0.45);
     await _flutterTts.setPitch(1.1);
   }
-  
+
   void _parseCorrectEquation() {
     try {
       if (widget.correctEquation.isEmpty) return;
@@ -69,7 +71,8 @@ class _HintScreenState extends State<HintScreen> {
       return;
     }
     setState(() => _isLoadingGemini = true);
-    String expl = await _geminiService.generateHintStory(_num1, _operator, _num2);
+    String expl =
+        await _geminiService.generateHintStory(_num1, _operator, _num2);
     if (mounted) {
       setState(() {
         _isLoadingGemini = false;
@@ -104,7 +107,8 @@ class _HintScreenState extends State<HintScreen> {
                 bottomRight: Radius.circular(24),
               ),
               boxShadow: [
-                BoxShadow(color: Colors.black12, offset: Offset(0, 4), blurRadius: 8)
+                BoxShadow(
+                    color: Colors.black12, offset: Offset(0, 4), blurRadius: 8)
               ],
             ),
             child: SafeArea(
@@ -115,14 +119,15 @@ class _HintScreenState extends State<HintScreen> {
                     top: 8,
                     left: 8,
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                      icon: const Icon(Icons.arrow_back,
+                          color: Colors.white, size: 28),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
-                  const Center(
+                  Center(
                     child: Text(
-                      "💡 Oops! Almost there.",
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.hintScreenOops,
+                      style: const TextStyle(
                         fontFamily: 'Public Sans',
                         color: Colors.white,
                         fontSize: 20,
@@ -134,7 +139,7 @@ class _HintScreenState extends State<HintScreen> {
               ),
             ),
           ),
-          
+
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -173,15 +178,17 @@ class _HintScreenState extends State<HintScreen> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFA726).withValues(alpha: 0.2),
+                            color:
+                                const Color(0xFFFFA726).withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.help_rounded, color: Color(0xFFFFA726), size: 28),
+                          child: const Icon(Icons.help_rounded,
+                              color: Color(0xFFFFA726), size: 28),
                         ),
                       ],
                     ),
                   ),
-                  
+
                   // Hint Card
                   if (_canParse)
                     Padding(
@@ -192,9 +199,14 @@ class _HintScreenState extends State<HintScreen> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(24),
-                          border: const Border(bottom: BorderSide(color: Color(0xFFF1F5F9), width: 4)),
+                          border: const Border(
+                              bottom: BorderSide(
+                                  color: Color(0xFFF1F5F9), width: 4)),
                           boxShadow: const [
-                            BoxShadow(color: Colors.black12, offset: Offset(0, 10), blurRadius: 20)
+                            BoxShadow(
+                                color: Colors.black12,
+                                offset: Offset(0, 10),
+                                blurRadius: 20)
                           ],
                         ),
                         child: Column(
@@ -202,12 +214,13 @@ class _HintScreenState extends State<HintScreen> {
                             // Header & Gemini Gen
                             Row(
                               children: [
-                                const Icon(Icons.school_rounded, color: Color(0xFFEC5B13), size: 32),
+                                const Icon(Icons.school_rounded,
+                                    color: Color(0xFFEC5B13), size: 32),
                                 const SizedBox(width: 8),
-                                const Expanded(
+                                Expanded(
                                   child: Text(
-                                    "Counting Check!",
-                                    style: TextStyle(
+                                    AppLocalizations.of(context)!.countingCheck,
+                                    style: const TextStyle(
                                       color: Color(0xFF1A237E),
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
@@ -215,22 +228,30 @@ class _HintScreenState extends State<HintScreen> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: _isLoadingGemini ? null : _playGeminiExplanation,
+                                  onTap: _isLoadingGemini
+                                      ? null
+                                      : _playGeminiExplanation,
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFF4FACFE).withValues(alpha: 0.1),
+                                      color: const Color(0xFF4FACFE)
+                                          .withValues(alpha: 0.1),
                                       shape: BoxShape.circle,
                                     ),
-                                    child: _isLoadingGemini 
-                                      ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
-                                      : const Icon(Icons.volume_up_rounded, color: Color(0xFF4FACFE), size: 24),
+                                    child: _isLoadingGemini
+                                        ? const SizedBox(
+                                            width: 24,
+                                            height: 24,
+                                            child: CircularProgressIndicator(
+                                                strokeWidth: 2))
+                                        : const Icon(Icons.volume_up_rounded,
+                                            color: Color(0xFF4FACFE), size: 24),
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 24),
-                            
+
                             // Row 1
                             Container(
                               padding: const EdgeInsets.all(12),
@@ -245,15 +266,18 @@ class _HintScreenState extends State<HintScreen> {
                                 runSpacing: 8.0,
                                 children: [
                                   Wrap(
-                                    children: List.generate(_num1, (index) => 
-                                      const Padding(
-                                        padding: EdgeInsets.only(right: 2.0),
-                                        child: Text("🍎", style: TextStyle(fontSize: 24)),
-                                      )
-                                    ),
+                                    children: List.generate(
+                                        _num1,
+                                        (index) => const Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 2.0),
+                                              child: Text("🍎",
+                                                  style:
+                                                      TextStyle(fontSize: 24)),
+                                            )),
                                   ),
                                   Text(
-                                    "First, we have $_num1.",
+                                    AppLocalizations.of(context)!.firstWeHave(_num1.toString()),
                                     softWrap: true,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
@@ -263,14 +287,16 @@ class _HintScreenState extends State<HintScreen> {
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: () => _flutterTts.speak("First, we have $_num1."),
-                                    child: const Icon(Icons.volume_up_rounded, color: Color(0xFF4FACFE), size: 20),
+                                    onTap: () => _flutterTts
+                                        .speak("First, we have $_num1."),
+                                    child: const Icon(Icons.volume_up_rounded,
+                                        color: Color(0xFF4FACFE), size: 20),
                                   ),
                                 ],
                               ),
                             ),
                             const SizedBox(height: 16),
-                            
+
                             // Row 2
                             Container(
                               padding: const EdgeInsets.all(12),
@@ -283,18 +309,23 @@ class _HintScreenState extends State<HintScreen> {
                                   Opacity(
                                     opacity: _operator == '-' ? 0.5 : 1.0,
                                     child: Wrap(
-                                      children: List.generate(_num2, (index) => 
-                                        const Padding(
-                                          padding: EdgeInsets.only(right: 2.0),
-                                          child: Text("🍎", style: TextStyle(fontSize: 20)),
-                                        )
-                                      ),
+                                      children: List.generate(
+                                          _num2,
+                                          (index) => const Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 2.0),
+                                                child: Text("🍎",
+                                                    style: TextStyle(
+                                                        fontSize: 20)),
+                                              )),
                                     ),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: Text(
-                                      _operator == '-' ? "Then we take away $_num2." : "Then we add $_num2.",
+                                      _operator == '-'
+                                          ? AppLocalizations.of(context)!.thenWeTakeAway(_num2.toString())
+                                          : AppLocalizations.of(context)!.thenWeAdd(_num2.toString()),
                                       softWrap: true,
                                       textAlign: TextAlign.left,
                                       style: const TextStyle(
@@ -305,14 +336,18 @@ class _HintScreenState extends State<HintScreen> {
                                     ),
                                   ),
                                   GestureDetector(
-                                    onTap: () => _flutterTts.speak(_operator == '-' ? "Then we take away $_num2." : "Then we add $_num2."),
-                                    child: const Icon(Icons.volume_up_rounded, color: Color(0xFF4FACFE), size: 20),
+                                    onTap: () => _flutterTts.speak(
+                                        _operator == '-'
+                                            ? "Then we take away $_num2."
+                                            : "Then we add $_num2."),
+                                    child: const Icon(Icons.volume_up_rounded,
+                                        color: Color(0xFF4FACFE), size: 20),
                                   ),
                                 ],
                               ),
                             ),
                             const SizedBox(height: 32),
-                            
+
                             GestureDetector(
                               onTap: () async {
                                 await _flutterTts.speak(explanationText);
@@ -331,10 +366,11 @@ class _HintScreenState extends State<HintScreen> {
                         ),
                       ),
                     ),
-                  
+
                   // Mascot
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 16.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -351,12 +387,15 @@ class _HintScreenState extends State<HintScreen> {
                                 bottomRight: Radius.circular(16),
                               ),
                               boxShadow: [
-                                BoxShadow(color: Colors.black12, offset: Offset(0, 4), blurRadius: 8)
+                                BoxShadow(
+                                    color: Colors.black12,
+                                    offset: Offset(0, 4),
+                                    blurRadius: 8)
                               ],
                             ),
-                            child: const Text(
-                              "Let's count the caps one more time!",
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.of(context)!.letsCountCapsOneMoreTime,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -371,7 +410,7 @@ class _HintScreenState extends State<HintScreen> {
               ),
             ),
           ),
-          
+
           // Bottom Button
           Padding(
             padding: const EdgeInsets.all(24.0),
@@ -381,20 +420,19 @@ class _HintScreenState extends State<HintScreen> {
                 height: 64,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF4FACFE),
-                  borderRadius: BorderRadius.circular(32),
-                  boxShadow: const [
-                    BoxShadow(color: Color(0xFF3182CE), offset: Offset(0, 4)),
-                  ]
-                ),
-                child: const Row(
+                    color: const Color(0xFF4FACFE),
+                    borderRadius: BorderRadius.circular(32),
+                    boxShadow: const [
+                      BoxShadow(color: Color(0xFF3182CE), offset: Offset(0, 4)),
+                    ]),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.refresh_rounded, color: Colors.white, size: 28),
-                    SizedBox(width: 12),
+                    const Icon(Icons.refresh_rounded, color: Colors.white, size: 28),
+                    const SizedBox(width: 12),
                     Text(
-                      "TRY AGAIN",
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.tryAgain,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.w900,

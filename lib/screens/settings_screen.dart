@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/settings_provider.dart';
 import '../providers/course_provider.dart';
+import 'package:math_buddy/l10n/app_localizations.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -17,16 +18,16 @@ class SettingsScreen extends StatelessWidget {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text(
-            "Parents Only",
-            style: TextStyle(
+          title: Text(
+            AppLocalizations.of(context)!.parentsOnly,
+            style: const TextStyle(
                 fontWeight: FontWeight.bold, color: Color(0xFF2C3E50)),
             textAlign: TextAlign.center,
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("What is 12 x 4?"),
+              Text(AppLocalizations.of(context)!.whatIsTwelveTimesFour),
               const SizedBox(height: 16),
               TextField(
                 controller: _controller,
@@ -35,7 +36,7 @@ class SettingsScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10)),
-                  hintText: "Answer",
+                  hintText: AppLocalizations.of(context)!.answerHint,
                 ),
               ),
             ],
@@ -46,7 +47,7 @@ class SettingsScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(dialogContext);
               },
-              child: const Text("Cancel", style: TextStyle(color: Colors.grey)),
+              child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.grey)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -61,23 +62,23 @@ class SettingsScreen extends StatelessWidget {
                   Provider.of<CourseProvider>(context, listen: false)
                       .resetCourse();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Progress Reset Successfully",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.progressResetSuccessfully,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
                       backgroundColor: Colors.green,
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Incorrect Answer"),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.incorrectAnswer),
                       backgroundColor: Colors.redAccent,
                     ),
                   );
                 }
               },
-              child: const Text("Verify",
-                  style: TextStyle(
+              child: Text(AppLocalizations.of(context)!.verify,
+                  style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
@@ -117,11 +118,11 @@ class SettingsScreen extends StatelessWidget {
                           color: Color(0xFF2C3E50)),
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      "Settings",
+                      AppLocalizations.of(context)!.settings,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
                         color: Color(0xFF2C3E50),
@@ -168,9 +169,9 @@ class SettingsScreen extends StatelessWidget {
                                         color: Color(0xFF4FACFE)),
                                   ),
                                   const SizedBox(width: 16),
-                                  const Text(
-                                    "Sound & Music",
-                                    style: TextStyle(
+                                  Text(
+                                    AppLocalizations.of(context)!.soundAndMusic,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xFF34495E),
@@ -212,9 +213,9 @@ class SettingsScreen extends StatelessWidget {
                                         color: Colors.deepPurpleAccent),
                                   ),
                                   const SizedBox(width: 16),
-                                  const Text(
-                                    "Voice Instructions",
-                                    style: TextStyle(
+                                  Text(
+                                    AppLocalizations.of(context)!.voiceInstructions,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xFF34495E),
@@ -258,7 +259,7 @@ class SettingsScreen extends StatelessWidget {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              "English",
+                                              AppLocalizations.of(context)!.english,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: settings.language ==
@@ -298,7 +299,7 @@ class SettingsScreen extends StatelessWidget {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              "Bangla",
+                                              AppLocalizations.of(context)!.bangla,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: settings.language ==
@@ -352,22 +353,22 @@ class SettingsScreen extends StatelessWidget {
                           color: Colors.white, size: 36),
                     ),
                     const SizedBox(height: 20),
-                    const Text(
-                      "Bottle Cap Math",
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.bottleCapMathTitleCase,
+                      style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w900,
                           color: Color(0xFF2C3E50)),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      "Making math tangible and fun.",
-                      style: TextStyle(color: Color(0xFF7F8C8D), fontSize: 14),
+                    Text(
+                      AppLocalizations.of(context)!.makingMathTangible,
+                      style: const TextStyle(color: Color(0xFF7F8C8D), fontSize: 14),
                     ),
                     const SizedBox(height: 6),
-                    const Text(
-                      "Version 1.0.0",
-                      style: TextStyle(color: Color(0xFFBDC3C7), fontSize: 12),
+                    Text(
+                      AppLocalizations.of(context)!.version,
+                      style: const TextStyle(color: Color(0xFFBDC3C7), fontSize: 12),
                     ),
                   ],
                 ),
@@ -402,15 +403,15 @@ class SettingsScreen extends StatelessWidget {
                                   blurRadius: 4,
                                   offset: Offset(0, 2))
                             ]),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.refresh_rounded,
+                            const Icon(Icons.refresh_rounded,
                                 color: Color(0xFFFF5252), size: 18),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
-                              "Reset All Progress",
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.resetAllProgress,
+                              style: const TextStyle(
                                   color: Color(0xFFFF5252),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16),
@@ -420,9 +421,9 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      "(REQUIRES PARENT TO UNLOCK)",
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.requiresParentToUnlock,
+                      style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 10,
                           fontWeight: FontWeight.w900,

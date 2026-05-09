@@ -5,6 +5,8 @@ class SettingsProvider extends ChangeNotifier {
   bool isSoundEnabled = true;
   String language = 'English';
 
+  Locale get currentLocale => language == 'Bangla' ? const Locale('bn') : const Locale('en');
+
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     isSoundEnabled = prefs.getBool('isSoundEnabled') ?? true;

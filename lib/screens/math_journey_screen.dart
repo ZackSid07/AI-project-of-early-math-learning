@@ -4,6 +4,7 @@ import '../providers/course_provider.dart';
 import '../theme/app_theme.dart';
 import 'camera_screen.dart';
 import '../main.dart'; // To access global cameras
+import 'package:math_buddy/l10n/app_localizations.dart';
 
 class MathJourneyScreen extends StatefulWidget {
   const MathJourneyScreen({super.key});
@@ -27,9 +28,9 @@ class _MathJourneyScreenState extends State<MathJourneyScreen> {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF1B2E4B)),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          "Math Journey",
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.mathJourney,
+          style: const TextStyle(
             fontFamily: 'Nunito',
             color: Color(0xFF1B2E4B),
             fontSize: 22,
@@ -93,7 +94,7 @@ class _MathJourneyScreenState extends State<MathJourneyScreen> {
                             size: 18),
                         const SizedBox(width: 8),
                         Text(
-                          "Map View",
+                          AppLocalizations.of(context)!.mapView,
                           style: TextStyle(
                             fontFamily: 'Nunito',
                             fontWeight: FontWeight.bold,
@@ -124,7 +125,7 @@ class _MathJourneyScreenState extends State<MathJourneyScreen> {
                             size: 18),
                         const SizedBox(width: 8),
                         Text(
-                          "List View",
+                          AppLocalizations.of(context)!.listView,
                           style: TextStyle(
                             fontFamily: 'Nunito',
                             fontWeight: FontWeight.bold,
@@ -207,9 +208,9 @@ class _MathJourneyScreenState extends State<MathJourneyScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildStateChip(level.state),
+                          _buildStateChip(context, level.state),
                           Text(
-                            "Level ${level.levelNumber}",
+                            AppLocalizations.of(context)!.level(level.levelNumber.toString()),
                             style: const TextStyle(
                               fontFamily: 'Nunito',
                               fontWeight: FontWeight.bold,
@@ -271,7 +272,7 @@ class _MathJourneyScreenState extends State<MathJourneyScreen> {
                       if (level.state == LevelState.current) ...[
                         const SizedBox(height: 30),
                         ToyButton(
-                          text: "Start Adventure \u2192", // Custom arrow
+                          text: AppLocalizations.of(context)!.startAdventure, // Custom arrow
                           color: AppTheme.primaryBlue,
                           onPressed: () {
                             // Route directly to CameraScreen, injecting the specific target LevelData
@@ -298,7 +299,7 @@ class _MathJourneyScreenState extends State<MathJourneyScreen> {
     );
   }
 
-  Widget _buildStateChip(LevelState state) {
+  Widget _buildStateChip(BuildContext context, LevelState state) {
     Color bgColor;
     Color textColor = Colors.white;
     String text;
@@ -307,18 +308,18 @@ class _MathJourneyScreenState extends State<MathJourneyScreen> {
     switch (state) {
       case LevelState.done:
         bgColor = AppTheme.successGreen;
-        text = "DONE";
+        text = AppLocalizations.of(context)!.done;
         icon = Icons.check_circle;
         break;
       case LevelState.current:
         bgColor = AppTheme.primaryBlue;
-        text = "CURRENT";
+        text = AppLocalizations.of(context)!.current;
         icon = Icons.play_arrow;
         break;
       case LevelState.locked:
         bgColor = Colors.grey.shade300;
         textColor = Colors.grey.shade700;
-        text = "LOCKED";
+        text = AppLocalizations.of(context)!.locked;
         icon = Icons.lock;
         break;
     }
@@ -453,7 +454,7 @@ class _MathJourneyScreenState extends State<MathJourneyScreen> {
                           SizedBox(
                             width: 50,
                             child: Text(
-                              "Lvl ${lvl.levelNumber}",
+                              AppLocalizations.of(context)!.lvl(lvl.levelNumber.toString()),
                               style: const TextStyle(
                                 fontFamily: 'Nunito',
                                 fontWeight: FontWeight.bold,
@@ -501,7 +502,7 @@ class _MathJourneyScreenState extends State<MathJourneyScreen> {
                       if (lvl.state == LevelState.current) ...[
                         const SizedBox(height: 16),
                         ToyButton(
-                          text: "Play Now \u25B6",
+                          text: AppLocalizations.of(context)!.playNow,
                           color: AppTheme.primaryBlue,
                           onPressed: () {
                             Navigator.push(
