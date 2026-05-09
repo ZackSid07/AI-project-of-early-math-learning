@@ -1,0 +1,323 @@
+================================================================================
+  BOTTLE CAP MATH — FLUTTER APP
+  DEVELOPMENT SESSION LOG
+================================================================================
+  Date      : 2026-05-08 (evening) → 2026-05-09 (morning)
+  Timezone  : UTC+6 (Bangladesh Standard Time)
+  Project   : Thesis-app-early-math-with-bottle-cap-math
+  Branch    : feature-apple-animation-tts-sync
+  Developer : [User]
+  AI Agent  : Antigravity (Google DeepMind)
+================================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  TASK 1 — Fix RenderFlex Overflow on Top Navigation Overlay
+  Time: ~20:39 BST | File: lib/screens/camera_screen.dart
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+USER INSTRUCTION:
+  "Fix RenderFlex Overflow for Top Navigation Overlay. The button that
+  navigates to the DigitalCapsScreen is causing a horizontal RenderFlex
+  overflow because the Row containing the top action buttons is too wide
+  for the screen.
+
+  ABSOLUTE CRITICAL DIRECTIVE:
+  DO NOT touch yolo_service.dart. DO NOT touch any camera initialization,
+  streaming logic, or YOLO bounding box drawing in camera_screen.dart.
+  DO NOT alter course_provider.dart or any math logic. You are ONLY
+  permitted to modify the layout widget (e.g., the Row or Positioned
+  container) holding the top navigation icons inside
+  lib/screens/camera_screen.dart.
+
+  - Wrap the Row in a SingleChildScrollView or change to Wrap, or use
+    Flexible/Expanded on the spacers.
+  - Ensure SafeArea is applied."
+
+ROOT CAUSE:
+  The header Row in camera_screen.dart (around line 658) had 4 children:
+    1. IconButton (back arrow, size 28)
+    2. const Text("BOTTLE CAP MATH") — FIXED width, no flexibility
+    3. IconButton (volume, size 32)
+    4. IconButton (grid/digital caps, size 32)
+  With MainAxisAlignment.spaceBetween and no flexible child, the combined
+  minimum width exceeded the available screen width, causing the
+  yellow-and-black stripe overflow debug warning.
+
+CHANGES MADE to lib/screens/camera_screen.dart:
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │ BEFORE                          │ AFTER                            │
+  ├─────────────────────────────────┼──────────────────────────────────┤
+  │ horizontal padding: 16.0        │ horizontal padding: 8.0          │
+  │ MainAxisAlignment.spaceBetween  │ (default — start)                │
+  │ const Text("BOTTLE CAP MATH")   │ Flexible(child: Text(...,        │
+  │   (no overflow handling)        │   overflow: TextOverflow.ellipsis│
+  │                                 │ ))                               │
+  │ volume icon size: 32            │ volume icon size: 28             │
+  │ grid icon size: 32              │ grid icon size: 28               │
+  └─────────────────────────────────┴──────────────────────────────────┘
+
+  Key change: Wrapped the title Text in a Flexible widget so it compresses
+  to fit instead of overflowing. Reduced icon sizes from 32→28 to reclaim
+  ~8px total. Reduced horizontal padding from 16→8 for more room.
+
+VERIFICATION:
+  No camera logic, YOLO service, or course provider touched.
+  The SafeArea was already present in the parent Column; unchanged.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  TASK 2 — Implement Dynamic DragTarget Slots Based on Full Equation Length
+  Time: ~21:24 BST | File: lib/screens/digital_caps_screen.dart
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+USER INSTRUCTION:
+  "Fix the slot generation in the digital drag-and-drop screen. Currently
+  there are not enough slots to input the answer (e.g. '9-5=' only provides
+  4 slots, but it needs 5 to accommodate the answer '4'). The number of
+  DragTarget slots must dynamically match the total character count of the
+  complete equation (operands + operator + equals sign + answer).
+
+  ABSOLUTE CRITICAL DIRECTIVE:
+  DO NOT touch yolo_service.dart, camera_screen.dart, or course_provider.dart.
+  ONLY modify the UI generation logic inside lib/screens/digital_caps_screen.dart.
+
+  Steps:
+  1. Extract full expected equation from current level.
+  2. Strip whitespace (e.g. '14 + 25 = 39' → '14+25=39').
+  3. Use string length as slot count.
+  4. Replace hardcoded DragTarget list with List.generate(...).
+  5. Wrap slots in a Wrap widget."
+
+ROOT CAUSE:
+  The _setupSlots() method split the equation by spaces:
+    final parts = widget.targetLevel!.expectedEquation.split(' ');
+    _requiredSlots = parts.length;
+  For "24 + 7 = 31", this gave 5 tokens ["24", "+", "7", "=", "31"],
+  so only 5 slots were created. But each CHARACTER needs its own slot,
+  so "24+7=31" → 7 chars → 7 slots required.
+
+CHANGES MADE to lib/screens/digital_caps_screen.dart (_setupSlots method):
+  BEFORE:
+    void _setupSlots() {
+      if (widget.targetLevel != null) {
+        // e.g., "1 + 2 = 3" -> 5 parts
+        final parts = widget.targetLevel!.expectedEquation.split(' ');
+        _requiredSlots = parts.length;
+      } else {
+        _requiredSlots = 5;
+      }
+      _slots = List.filled(_requiredSlots, null);
+    }
+
+  AFTER:
+    void _setupSlots() {
+      if (widget.targetLevel != null) {
+        // Strip all whitespace to get the raw character count.
+        // e.g., "24 + 7 = 31" -> "24+7=31" -> 7 slots
+        final stripped = widget.targetLevel!.expectedEquation.replaceAll(' ', '');
+        _requiredSlots = stripped.length;
+      } else {
+        _requiredSlots = 5; // Default for practice mode
+      }
+      _slots = List.filled(_requiredSlots, null);
+    }
+
+SLOT COUNT EXAMPLES (before vs after):
+  Equation           | Old slots | New slots | Correct?
+  "1 + 2 = 3"        |     5     |     5     |   ✅
+  "9 - 4 = 5"        |     5     |     5     |   ✅
+  "24 + 7 = 31"      |     5     |     7     |   ✅ (was broken)
+  "14 + 25 = 39"     |     5     |     8     |   ✅ (was broken)
+  "38 + 7 = 45"      |     5     |     7     |   ✅ (was broken)
+
+NOTE: The Wrap widget wrapping the DragTargets was already present in
+the file from prior work; it handles line-wrapping for 8+ slot equations.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  TASK 3 — Update Success Flow: "Next" and "Camera" Buttons
+  Time: ~22:18 BST | File: lib/screens/digital_caps_screen.dart
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+USER INSTRUCTION:
+  "Update what happens when a user successfully completes an equation in
+  DigitalCapsScreen. Currently it shows a dialog and auto-navigates.
+  Replace this with a 'Success' UI state showing two buttons:
+    - 'Next' button → MathJourneyScreen (home/map)
+    - 'Camera' button → CameraScreen with the SAME targetLevel so they can
+      practice the same math with physical bottle caps.
+
+  ABSOLUTE CRITICAL DIRECTIVE:
+  DO NOT touch yolo_service.dart, camera_screen.dart initialization/TFLite/
+  bounding box logic, or course_provider.dart (3-strike system must remain
+  intact). ONLY modify state and UI inside lib/screens/digital_caps_screen.dart."
+
+CHANGES MADE to lib/screens/digital_caps_screen.dart:
+
+  1. NEW IMPORTS ADDED (top of file):
+       import 'camera_screen.dart';
+       import 'math_journey_screen.dart';
+       import '../main.dart' as main;   // for global 'cameras' list
+
+  2. NEW STATE VARIABLE added to _DigitalCapsScreenState:
+       bool _isSuccess = false;
+
+  3. _handleSuccess() METHOD REWRITTEN:
+     BEFORE: showed AlertDialog → user tapped "Next" → popped twice
+     AFTER:
+       void _handleSuccess(String equationStr) {
+         setState(() {
+           _isSuccess = true;
+           consecutiveMistakes = 0;
+         });
+         _flutterTts.speak("Correct! Well done!");
+         if (!widget.isPracticeMode && widget.targetLevel != null) {
+           Provider.of<CourseProvider>(context, listen: false)
+               .completeCurrentLevel(widget.targetLevel!.levelNumber);
+         }
+       }
+
+  4. BUILD METHOD updated — conditional rendering based on _isSuccess:
+
+     When _isSuccess == false:  (normal play UI — unchanged)
+       - Equation slot DragTargets (Wrap)
+       - Cap bank (numbers 0-9 and operators)
+       - SUBMIT button
+
+     When _isSuccess == true:  (NEW success UI)
+       - "Great Job! 🎉" text (successGreen, fontSize 48, bold)
+       - "You solved the puzzle digitally!" subtitle
+       - Two ToyButtons in a Wrap row:
+           • "NEXT" (map icon, primaryBlue)
+               → Navigator.pushAndRemoveUntil → MathJourneyScreen
+                 (route predicate: route.isFirst keeps HomeScreen)
+           • "CAMERA" (camera icon, Colors.orange)
+               → Navigator.push → CameraScreen(
+                    cameras: main.cameras,
+                    targetLevel: widget.targetLevel,  ← same level!
+                    isPracticeMode: widget.isPracticeMode,
+                  )
+
+IMPORTANT DESIGN DECISIONS:
+  - pushAndRemoveUntil for NEXT: clears the navigation stack back to
+    HomeScreen, then pushes MathJourneyScreen on top. This prevents
+    accumulating stale screens on the back-stack.
+  - CAMERA button passes widget.targetLevel directly, so the camera
+    screen will enforce the SAME equation (not advance to next level).
+  - completeCurrentLevel() is still called immediately on success so
+    the journey map updates correctly regardless of which button is pressed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  USER ACTION — labels.txt Edited Manually
+  Time: ~07:17 BST (next day) | File: assets/models/labels.txt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+USER ACTION (manual edit, not AI-driven):
+  The user trimmed labels.txt from 103 lines down to 13 lines.
+  Removed labels 10–102 (which were excess numeric labels not used by
+  the trained YOLO model). Appended the three operator class labels.
+
+FINAL CONTENT of assets/models/labels.txt (13 lines):
+  0       ← digit cap label
+  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+  equal   ← operator cap label
+  minus
+  plus
+
+WHY THIS MATTERS:
+  The YOLO model (yolo_service.dart) maps detected class indices to these
+  labels. The labels.txt must exactly mirror the classes the model was
+  trained on. With the old file containing numeric labels 10-102, the
+  index-to-label mapping was wrong for operator classes. Now indices 10,
+  11, 12 correctly map to "equal", "minus", "plus".
+
+  In camera_screen.dart _processDetections(), the rawTag is checked:
+    if (rawTag == 'equal')  symbol = '=';
+    if (rawTag == 'plus')   symbol = '+';
+    if (rawTag == 'minus')  symbol = '-';
+  So the label names must match exactly — this fix is critical for the
+  YOLO cap detection to work correctly.
+
+  flutter run was executed after this change and the app connected
+  successfully to device GM1900. Log showed:
+    "Sorted Equation: 1+4=5" — detection working correctly.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  FILES MODIFIED SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  FILE                                  | MODIFIED BY | TASK(S)
+  ─────────────────────────────────────────────────────────────────────
+  lib/screens/camera_screen.dart        | AI Agent    | Task 1
+  lib/screens/digital_caps_screen.dart  | AI Agent    | Task 2, Task 3
+  assets/models/labels.txt              | User (manual)| labels fix
+
+  FILES NEVER TOUCHED (protected):
+  lib/services/yolo_service.dart        — camera/YOLO inference engine
+  lib/providers/course_provider.dart    — math logic & level progression
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  CURRENT APP STATE / KNOWN ISSUES TO PICK UP NEXT SESSION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✅ WORKING:
+    - Camera screen header no longer overflows on narrow phones
+    - Digital caps mode creates correct number of slots per equation
+    - Success screen shows "Great Job!" with NEXT + CAMERA options
+    - YOLO label mapping is now correct (equal/minus/plus)
+    - Detection log shows "Sorted Equation: 1+4=5" — inference running
+
+  ⚠️  THINGS TO VERIFY / POTENTIAL FOLLOW-UP:
+    1. Multi-digit equations in digital caps mode:
+         When the user drags "2", "4", "+", "7", "=", "3", "1" into the
+         7 slots for "24 + 7 = 31", the _validateEquation() joins them as
+         "24+7=31" — but the comparison is:
+           fullDetectedStr = "$num1 $op $num2 = $detectedAnswer"
+                           = "24 + 7 = 31"
+         This SHOULD match widget.targetLevel!.expectedEquation.
+         ✅ Logic appears correct. Worth testing on device.
+
+    2. Practice mode in digital caps has _requiredSlots = 5 (hardcoded).
+         For practice mode there's no targetLevel, so 5 is a fixed default.
+         This means practice mode only works for single-digit equations.
+         Could be extended in future to let user choose equation length.
+
+    3. The "Lost connection to device" error in the flutter run log:
+         This appears to be a BLASTBufferQueue disconnect from the camera
+         preview closing (normal on navigation away). Not a crash.
+
+    4. The "Failed to find provider info for com.oplus.statistics.provider"
+         error is an OnePlus/OPPO device-specific analytics provider that
+         is not available in debug builds. Harmless, can be ignored.
+
+    5. Digital caps mode: When user presses CAMERA button after success,
+         they go to CameraScreen with the same level. If they then succeed
+         there too, completeCurrentLevel() would be called a second time.
+         The CourseProvider should be idempotent here — worth verifying.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  HOW TO PICK UP NEXT SESSION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Read this file first for full context.
+  2. Key files to be aware of:
+       - lib/screens/digital_caps_screen.dart  (drag-and-drop UI)
+       - lib/screens/camera_screen.dart         (camera + YOLO UI)
+       - lib/screens/math_journey_screen.dart   (level map)
+       - lib/screens/home_screen.dart           (home / start screen)
+       - lib/providers/course_provider.dart     (level state management)
+       - lib/services/yolo_service.dart         (TFLite YOLO inference)
+       - assets/models/labels.txt               (YOLO class labels)
+  3. Device used for testing: GM1900 (OnePlus 7, Android)
+  4. Run command: flutter run
+     (from project root, with device connected via USB)
+
+================================================================================
+  END OF SESSION LOG
+================================================================================
